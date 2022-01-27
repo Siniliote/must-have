@@ -7,14 +7,14 @@ OS := $(shell uname)
 
 ECHO = .mk/bin/display-job-title
 
-PROJECT_ROOT = api
+PROJECT_ROOT = .
 PROJECT_BUILD = build
 PHPUNIT_COVERAGE = $(PROJECT_BUILD)/phpunit/coverage
 
 URL_WEBSITE = http://localhost
-URL_API = $(URL_WEBSITE):8088/api
-URL_SWAGGER = $(URL_WEBSITE):8080/swagger
-URL_ADMINER = $(URL_WEBSITE):8088
+URL_API = $(URL_WEBSITE)/api
+URL_SWAGGER = $(URL_WEBSITE)/swagger
+URL_ADMINER = $(URL_WEBSITE)
 
 XDEBUG_INI = /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 

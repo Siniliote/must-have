@@ -6,6 +6,10 @@
 docker.start: ## Docker: Build, (re)create, start, and attache to containers for a service (detached mode). | https://docs.docker.com/compose/reference/up/
 	docker-compose up --remove-orphans -d
 
+.PHONY: docker.start.dev
+docker.start.dev: ## Docker: Same `docker.start` + xDebug 
+	docker-compose -f docker-compose.yml -f docker-compose.debug.yml up --remove-orphans -d
+
 .PHONY: docker.start.one
 docker.start.one: docker.stop.all docker.start ## Docker: Stop all projects running containers & Start current project.
 
@@ -14,6 +18,10 @@ docker.start.one: docker.stop.all docker.start ## Docker: Stop all projects runn
 # -d: Detached mode: Run containers in the background, print new container names.
 docker.build: ## Docker: Same `docker.start` command + build images before starting containers (detached mode). | https://docs.docker.com/compose/reference/up/
 	docker-compose up --build -d
+
+.PHONY: docker.build.dev
+docker.build.dev: ## Docker: Same `docker.build` + xDebug
+	docker-compose -f docker-compose.yml -f docker-compose.debug.yml up --build -d
 
 .PHONY: docker.build.force
 docker.build.force: docker.remove docker.build ## Docker: Stop, remove & rebuild current containers.
@@ -140,3 +148,7 @@ docker.logs: ## Docker: Show logs.
 .PHONY: docker.bash
 docker.bash: ## Docker: bash access.
 	$(EXEC_APP_ROOT) bash
+
+.PHONY: docker.owner
+docker.owner: ## Docker: set yourself as owner of the project files that were created by the docker container.
+	docker-compose run --rm php chown -R $(id -u):$(id -g) .

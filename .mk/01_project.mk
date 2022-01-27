@@ -3,6 +3,9 @@
 .PHONY: start
 start: docker.start ready ## Project: Start the current project.
 
+.PHONY: start.dev
+start.dev: docker.start.dev ready ## Project: Start the current project.
+
 .PHONY: start.one
 start.one: docker.start.one ready ## Project: Stop all containers & start the current project.
 

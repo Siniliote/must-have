@@ -8,7 +8,7 @@ docker.start: ## Docker: Build, (re)create, start, and attache to containers for
 
 .PHONY: docker.start.dev
 docker.start.dev: ## Docker: Same `docker.start` + xDebug 
-	docker-compose -f docker-compose.yml -f docker-compose.debug.yml up --remove-orphans -d
+	docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.debug.yml up --remove-orphans -d
 
 .PHONY: docker.start.one
 docker.start.one: docker.stop.all docker.start ## Docker: Stop all projects running containers & Start current project.
@@ -21,7 +21,7 @@ docker.build: ## Docker: Same `docker.start` command + build images before start
 
 .PHONY: docker.build.dev
 docker.build.dev: ## Docker: Same `docker.build` + xDebug
-	docker-compose -f docker-compose.yml -f docker-compose.debug.yml up --build -d
+	docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.debug.yml up --build -d
 
 .PHONY: docker.build.force
 docker.build.force: docker.remove docker.build ## Docker: Stop, remove & rebuild current containers.

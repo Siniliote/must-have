@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Accueil' %}
+
+{% block body %}
+    <h1>{{ block('title') }}</h1>
+
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem neque odio placeat possimus provident! A animi assumenda eveniet exercitationem, impedit in ipsa ipsum labore nam nemo neque quae similique ullam.
+
+    <turbo-frame id="products_list" src="{{ path('app_produits') }}">
+        <p>Chargement de la liste des produits...</p>
+    </turbo-frame>
+{% endblock %}

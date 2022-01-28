@@ -18,6 +18,10 @@ services:
       - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
       - ./public:/srv/app/public:ro
 
+  adminer:
+    image: adminer
+    restart: always
+
   node:
     build:
       context: .

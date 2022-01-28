@@ -12,7 +12,7 @@ use Symfony\UX\Turbo\Stream\TurboStreamResponse;
 
 final class PagesController extends AbstractController
 {
-    #[Route('/', name: 'app_homepage')]
+    #[Route('/home_produit', name: 'app_homepage')]
     public function home(): Response
     {
         return $this->render('pages/home.html.twig');

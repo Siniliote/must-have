@@ -8,24 +8,6 @@ ARG PHP_VERSION=8.1
 ARG CADDY_VERSION=2
 ARG NODE_VERSION=17
 
-# "node" stage
-FROM node:${NODE_VERSION}-alpine AS symfony_node
-
-WORKDIR /srv/app
-
-COPY package*.json yarn.lock  ./
-
-COPY vendor ./vendor
-
-RUN yarn install
-
-## If you are building your code for production
-# RUN yarn build
-
-COPY . .
-
-RUN yarn build
-
 # "php" stage
 FROM php:${PHP_VERSION}-fpm-alpine AS symfony_php
 
@@ -83,11 +65,7 @@ HEALTHCHECK --interval=10s --timeout=3s --retries=3 CMD ["docker-healthcheck"]
 
 RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 COPY docker/php/conf.d/symfony.prod.ini $PHP_INI_DIR/conf.d/symfony.ini
-
 COPY docker/php/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
-
-COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
-RUN chmod +x /usr/local/bin/docker-entrypoint
 
 VOLUME /var/run/php
 
@@ -117,12 +95,14 @@ RUN composer create-project "${SKELETON} ${SYMFONY_VERSION}" . --stability=$STAB
 	composer clear-cache
 
 ###> recipes ###
+
 ###> doctrine/doctrine-bundle ###
 RUN apk add --no-cache --virtual .pgsql-deps postgresql-dev; \
 	docker-php-ext-install -j$(nproc) pdo_pgsql; \
 	apk add --no-cache --virtual .pgsql-rundeps so:libpq.so.5; \
 	apk del .pgsql-deps
 ###< doctrine/doctrine-bundle ###
+
 ###> symfony/panther ###
 # Chromium and ChromeDriver
 ENV PANTHER_NO_SANDBOX 1
@@ -137,23 +117,58 @@ RUN apk add --no-cache chromium chromium-chromedriver
 #	tar -zxf geckodriver-v$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/bin; \
 #	rm geckodriver-v$GECKODRIVER_VERSION-linux64.tar.gz
 ###< symfony/panther ###
+
 ###< recipes ###
 
-COPY . .
+# prevent the reinstallation of vendors at every changes in the source code
+COPY composer.* symfony.lock ./
+RUN set -eux; \
+	composer install --prefer-dist --no-dev --no-progress --no-scripts --no-interaction; \
+    composer clear-cache
+
+# copy only specifically what we need
+COPY .env .env.prod .env.test ./
+COPY bin bin/
+COPY config config/
+COPY public public/
+COPY src src/
+COPY templates templates/
+COPY translations translations/
 
 RUN set -eux; \
-	mkdir -p var/cache var/log; \
-	composer install --prefer-dist --no-dev --no-progress --no-scripts --no-interaction; \
+    mkdir -p var/cache var/log; \
 	composer dump-autoload --classmap-authoritative --no-dev; \
 	composer symfony:dump-env prod; \
 	composer run-script --no-dev post-install-cmd; \
-	chmod +x bin/console; sync
+    chmod +x bin/console; sync;
+
 VOLUME /srv/app/var
 
-COPY --from=symfony_node /srv/app/public/build public/build
+COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+RUN chmod +x /usr/local/bin/docker-entrypoint
 
 ENTRYPOINT ["docker-entrypoint"]
 CMD ["php-fpm"]
+
+# "node" stage
+FROM node:${NODE_VERSION}-alpine AS symfony_node
+
+WORKDIR /srv/app
+
+COPY package*.json yarn.lock  ./
+
+COPY vendor ./vendor
+
+RUN set -eux; \
+    yarn install; \
+    yarn cache clean
+
+## If you are building your code for production
+# RUN yarn build
+
+COPY . .
+
+RUN yarn build
 
 FROM caddy:${CADDY_VERSION}-builder-alpine AS symfony_caddy_builder
 
@@ -170,6 +185,8 @@ WORKDIR /srv/app
 COPY --from=dunglas/mercure:v0.11 /srv/public /srv/mercure-assets/
 COPY --from=symfony_caddy_builder /usr/bin/caddy /usr/bin/caddy
 COPY --from=symfony_php /srv/app/public public/
+COPY --from=symfony_node /srv/app/public/build public/build
+
 COPY docker/caddy/Caddyfile /etc/caddy/Caddyfile
 
 FROM symfony_php AS symfony_php_debug

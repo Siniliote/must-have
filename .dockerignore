@@ -25,5 +25,4 @@ docker/db/data/
 helm/
 public/bundles/
 var/
-vendor/
 node_modules/

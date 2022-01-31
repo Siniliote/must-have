@@ -13,7 +13,9 @@ FROM node:${NODE_VERSION}-alpine AS symfony_node
 
 WORKDIR /srv/app
 
-COPY package*.json yarn.lock ./
+COPY package*.json yarn.lock  ./
+
+COPY vendor ./vendor
 
 RUN yarn install
 

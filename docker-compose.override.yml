@@ -3,6 +3,8 @@ version: "3.9"
 # Development environment override
 services:
   php:
+    build:
+      network: host
     volumes:
       # The "cached" option has no effect on Linux but improves performance on Mac
       - ./:/srv/app:rw,cached
@@ -14,9 +16,10 @@ services:
       APP_ENV: dev
 
   caddy:
+    build:
+      network: host
     volumes:
       - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
-      - ./public:/srv/app/public:ro
 
   adminer:
     image: adminer
@@ -27,12 +30,8 @@ services:
       context: .
       target: symfony_node
     volumes:
-      - ./:/srv/app:rw,cached
-    ports:
-    - target: 8080
-      published: 8080
-      protocol: tcp
-    command: 'sh -c "yarn install; yarn encore dev-server -- --server-type https --client-web-socket-url https://localhost:8080 --host 0.0.0.0"'
+      - ./public/build:/srv/app/public/build:rw,cached
+    command: 'sh -c "yarn install; yarn encore dev --watch"'
 
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###

@@ -69,6 +69,10 @@ COPY docker/php/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 
 VOLUME /var/run/php
 
+COPY --from=ghcr.io/surnet/alpine-wkhtmltopdf:3.15.0-0.12.6-full \
+    /bin/wkhtmltopdf /bin/wkhtmltopdf
+
+
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser

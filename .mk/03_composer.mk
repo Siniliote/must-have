@@ -38,7 +38,7 @@ composer.licenses: ## Composer: List the name, version and license of every pack
 .PHONY: composer.validate
 # --no-check-publish: Do not emit an error if composer.json is unsuitable for publishing as a package on Packagist but is otherwise valid.
 composer.validate: ## Composer: Check if your composer.json is valid. | https://getcomposer.org/doc/03-cli.md#validate
-	docker-compose run --no-deps $(SERVICE_APP) composer validate --no-check-publish
+	docker compose run --no-deps $(SERVICE_APP) composer validate --no-check-publish
 
 .PHONY: composer.dumpenv.prod
 composer.dumpenv.prod: ## Composer: Dump .env files for "prod".

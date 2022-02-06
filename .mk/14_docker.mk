@@ -4,11 +4,11 @@
 # --remove-orphans: Remove containers for services not defined in the Compose file.
 # -d: Detached mode: Run containers in the background, print new container names.
 docker.start: ## Docker: Build, (re)create, start, and attache to containers for a service (detached mode). | https://docs.docker.com/compose/reference/up/
-	docker-compose up --remove-orphans -d
+	docker compose up --remove-orphans -d
 
 .PHONY: docker.start.dev
 docker.start.dev: ## Docker: Same `docker.start` + xDebug 
-	docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.debug.yml up --remove-orphans -d
+	docker compose -f docker compose.yml -f docker compose.override.yml -f docker compose.debug.yml up --remove-orphans -d
 
 .PHONY: docker.start.one
 docker.start.one: docker.stop.all docker.start ## Docker: Stop all projects running containers & Start current project.
@@ -17,18 +17,18 @@ docker.start.one: docker.stop.all docker.start ## Docker: Stop all projects runn
 # --build: Build images before starting containers.
 # -d: Detached mode: Run containers in the background, print new container names.
 docker.build: ## Docker: Same `docker.start` command + build images before starting containers (detached mode). | https://docs.docker.com/compose/reference/up/
-	docker-compose up --build -d
+	docker compose up --build -d
 
 .PHONY: docker.build.dev
 docker.build.dev: ## Docker: Same `docker.build` + xDebug
-	docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.debug.yml up --build -d
+	docker compose -f docker compose.yml -f docker compose.override.yml -f docker compose.debug.yml up --build -d
 
 .PHONY: docker.build.force
 docker.build.force: docker.remove docker.build ## Docker: Stop, remove & rebuild current containers.
 
 .PHONY: docker.stop
 docker.stop: ## Docker: Stop running containers without removing them. | https://docs.docker.com/compose/reference/stop/
-	docker-compose stop
+	docker compose stop
 
 .PHONY: docker.stop.all
 docker.stop.all: ## Docker: Stop all projects running containers without removing them. | https://docs.docker.com/compose/reference/stop/
@@ -42,7 +42,7 @@ docker.down: ## Docker: [PROMPT yN] Stop containers and remove containers, netwo
 	done ; \
 	if [ $$CONTINUE == "y" ]; \
 	then \
-		docker-compose down --remove-orphans; \
+		docker compose down --remove-orphans; \
 		echo -e "\033[1;42mContainers, networks, volumes, and images created by up removed\033[0m"; \
 	else \
 		$(MAKE_S) cancelled; \
@@ -69,7 +69,7 @@ docker.remove: ## Docker: [PROMPT yN] Stop & Remove service containers (only cur
 	done ; \
 	if [ $$CONTINUE == "y" ]; \
 	then \
-		docker-compose rm --stop -v; \
+		docker compose rm --stop -v; \
 		echo -e "\033[1;42mStopped service containers removed\033[0m"; \
 	else \
 		$(MAKE_S) cancelled; \
@@ -139,7 +139,7 @@ docker.networks: ## Docker: list networks. | https://docs.docker.com/engine/refe
 
 .PHONY: docker.logs
 docker.logs: ## Docker: Show logs.
-	docker-compose logs -f -t $(SERVICE_APP)
+	docker compose logs -f -t $(SERVICE_APP)
 
 # .PHONY: docker.zsh
 # docker.zsh: ## Docker: zsh access.
@@ -151,4 +151,4 @@ docker.bash: ## Docker: bash access.
 
 .PHONY: docker.owner
 docker.owner: ## Docker: set yourself as owner of the project files that were created by the docker container.
-	docker-compose run --rm php chown -R $(id -u):$(id -g) .
+	docker compose run --rm php chown -R $(id -u):$(id -g) .

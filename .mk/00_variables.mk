@@ -21,9 +21,9 @@ XDEBUG_INI = /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 SERVICE_PHP = php
 SERVICE_NODE = node
 
-EXEC = docker-compose exec
+EXEC = docker compose exec
 ifdef NO_TTY
-  EXEC = docker-compose exec -T
+  EXEC = docker compose exec -T
 endif
 
 EXEC_USER = $(EXEC) --user $(USER_ID):$(GROUP_ID)

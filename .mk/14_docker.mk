@@ -151,4 +151,4 @@ docker.bash: ## Docker: bash access.
 
 .PHONY: docker.owner
 docker.owner: ## Docker: set yourself as owner of the project files that were created by the docker container.
-	docker compose run --rm php chown -R $(id -u):$(id -g) .
+	docker compose run --rm php chown -R $(USER_ID):$(GROUP_ID) .

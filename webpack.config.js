@@ -1,3 +1,4 @@
+const path = require('path');
 const Encore = require('@symfony/webpack-encore');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
@@ -70,6 +71,15 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
+
+    .configureFontRule({
+        type: 'asset'
+    }, () => {
+        return {
+            test: /\.(ttf|woff|woff2)$/i,
+            type: 'asset/inline'
+        }
+    })
 ;
 
 module.exports = Encore.getWebpackConfig();

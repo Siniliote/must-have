@@ -7,10 +7,10 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/global.scss';
-import './styles/signin-out.scss';
+import './styles/dashboard.css';
 import './styles/app.css';
 
-require('bootstrap');
+import 'bootstrap';
 
 // start the Stimulus application
 import './bootstrap';

@@ -19,6 +19,7 @@ services:
     build:
       network: host
     volumes:
+      - ./public/build:/srv/app/public/build:rw,cached
       - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
 
   adminer:
@@ -28,9 +29,11 @@ services:
   node:
     build:
       context: .
-      target: symfony_node
+      target: symfony_node   
+    depends_on:
+      - php
     volumes:
-      - ./public/build:/srv/app/public/build:rw,cached
+      - ./:/srv/app:rw,cached
     command: 'sh -c "yarn install; yarn encore dev --watch"'
 
 ###> symfony/mercure-bundle ###

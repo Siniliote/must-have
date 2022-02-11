@@ -159,16 +159,13 @@ FROM node:${NODE_VERSION}-alpine AS symfony_node
 
 WORKDIR /srv/app
 
-COPY package*.json yarn.lock  ./
+COPY package*.json yarn.*  ./
 
-COPY vendor ./vendor
+COPY --from=symfony_php /srv/app/vendor ./vendor
 
 RUN set -eux; \
     yarn install; \
     yarn cache clean
-
-## If you are building your code for production
-# RUN yarn build
 
 COPY . .
 

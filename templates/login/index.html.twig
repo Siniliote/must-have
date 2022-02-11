@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <title>{% block title %}Sign In{% endblock %}</title>
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+            {{ encore_entry_link_tags('login') }}
+        {% endblock %}
+        <style>
+            .bd-placeholder-img {
+                font-size: 1.125rem;
+                text-anchor: middle;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                user-select: none;
+            }
+            @media (min-width: 768px) {
+                .bd-placeholder-img-lg {
+                    font-size: 3.5rem;
+                }
+            }
+        </style>
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+            {{ encore_entry_script_tags('login') }}
+        {% endblock %}
+    </head>
+    <body class="text-center">
+        {% block body %}
+            <main class="form-signin">
+                <form method="post">
+                    <img class="mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% endif %}
+
+                    {% if app.user %}
+                        <div class="mb-3">
+                            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+                        </div>
+                    {% endif %}
+
+                    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+                    <div class="form-floating">
+                        <input type="email" value="{{ last_username }}" name="_username" class="form-control" id="inputEmail" placeholder="name@example.com" autocomplete="email" required autofocus>
+                        <label for="inputEmail">Email address / Username</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="password" name="_password" class="form-control" id="inputPassword" placeholder="Password" autocomplete="current-password" required>
+                        <label for="inputPassword">Password</label>
+                    </div>
+                    <div class="checkbox mb-3">
+                        <label>
+                            <input type="checkbox" name="_remember_me"> Remember me
+                        </label>
+                    </div>
+
+                    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+                    <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
+                    <input type="hidden" name="_target_path" value="/profile"/>
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" >
+                </form>
+            </main>
+        {% endblock %}
+    </body>
+</html>

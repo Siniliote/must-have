@@ -64,7 +64,7 @@ clean: ## Project: [PROMPT yN] Remove build, var, vendor & node_modules folders.
 	if [ $$CONTINUE == "y" ]; \
 	then \
 		cd $(PROJECT_ROOT); \
-		rm -rf build var vendor node_modules; \
+		rm -rf public/build var vendor node_modules; \
 		echo -e "\033[1;42mbuild, var, vendor & node_modules removed\033[0m"; \
 	else \
 		$(MAKE_S) cancelled; \

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <title>{% block title %}Sign Out{% endblock %}</title>
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+        <style>
+            .bd-placeholder-img {
+                font-size: 1.125rem;
+                text-anchor: middle;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                user-select: none;
+            }
+            @media (min-width: 768px) {
+                .bd-placeholder-img-lg {
+                    font-size: 3.5rem;
+                }
+            }
+        </style>
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+    </head>
+    <body class="text-center">
+        {% block body %}
+            <main class="form-signout">
+                {{ form_start(registrationForm) }}
+                    <img class="mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+                    <h1 class="h3 mb-3 fw-normal">Register</h1>
+                    {{ form_row(registrationForm.email) }}
+                    {{ form_row(registrationForm.username) }}
+                    {{ form_row(registrationForm.plainPassword, {label: 'Password'}) }}
+                    {{ form_row(registrationForm.agreeTerms) }}
+
+                    <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
+                {{ form_end(registrationForm) }}
+            </main>
+        {% endblock %}
+    </body>
+</html>

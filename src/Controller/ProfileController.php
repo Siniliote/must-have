@@ -6,13 +6,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class HighchartsController extends AbstractController
+class ProfileController extends AbstractController
 {
-    #[Route('/highcharts', name: 'highcharts')]
+    public const PROFILE_ROUTE = 'profile';
+
+    #[Route('/profile', name: 'profile')]
     public function index(): Response
     {
-        return $this->render('highcharts/index.html.twig', [
-            'controller_name' => 'HighchartsController',
+        return $this->render('profile/index.html.twig', [
+            'controller_name' => 'ProfileController',
         ]);
     }
 }

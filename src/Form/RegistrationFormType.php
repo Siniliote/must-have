@@ -6,6 +6,7 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -19,24 +20,34 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('email', options: [
                 'attr' => [
+                    'class' => 'form-control-user',
                     'placeholder' => 'Email',
                 ],
                 'row_attr' => [
-                    'class' => 'form-floating',
+                    'class' => 'form-group',
                 ],
+                'label' => false,
             ])
             ->add('username', options: [
                 'attr' => [
+                    'class' => 'form-control-user',
                     'placeholder' => 'Username',
                 ],
                 'row_attr' => [
-                    'class' => 'form-floating',
+                    'class' => 'form-group',
                 ],
+                'label' => false,
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
+                'attr' => [
+                    'class' => 'custom-control-input',
+                ],
                 'label_attr' => [
-                    'class' => 'checkbox-switch',
+                    'class' => 'custom-control-label',
+                ],
+                'row_attr' => [
+                    'class' => 'custom-control custom-checkbox small',
                 ],
                 'constraints' => [
                     new IsTrue([
@@ -44,16 +55,33 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
+            ->add('plainPassword', RepeatedType::class, [
                 'mapped' => false,
-                'attr' => [
-                    'placeholder' => 'Password',
-                    'autocomplete' => 'new-password'
+                'type' => PasswordType::class,
+                'invalid_message' => 'The password fields must match.',
+                'options' => ['attr' => ['class' => 'password-field']],
+                'required' => true,
+                'first_options'  => [
+                    'label' => false,
+                    'attr' => [
+                        'class' => 'form-control-user',
+                        'placeholder' => 'Password',
+                        'autocomplete' => 'new-password'
+                    ],
+                    'row_attr' => [
+                        'class' => 'col-sm-6 mb-3 mb-sm-0',
+                    ],
                 ],
-                'row_attr' => [
-                    'class' => 'form-floating',
+                'second_options' => [
+                    'label' => false,
+                    'attr' => [
+                        'class' => 'form-control-user',
+                        'placeholder' => 'Repeat Password',
+                        'autocomplete' => 'new-password'
+                    ],
+                    'row_attr' => [
+                        'class' => 'col-sm-6',
+                    ],
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -66,13 +94,16 @@ class RegistrationFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
-            ])
+            ]);
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
+            'attr' => [
+                'class' => 'user'
+            ],
             'data_class' => User::class,
         ]);
     }
